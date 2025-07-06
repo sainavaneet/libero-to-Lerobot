@@ -34,10 +34,8 @@ libero-to-Lerobot/
 - **Error Handling**: Robust error handling with detailed logging
 - **Configurable**: Easy configuration through `config.py`
 
-## 📋 Requirements
+## 📋 Setup
 
-
-### Setup
 
 ```bash
 pip install -e .
