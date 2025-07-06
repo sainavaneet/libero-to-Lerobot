@@ -36,6 +36,12 @@ libero-to-Lerobot/
 
 ## 📋 Requirements
 
+
+### Setup
+
+```bash
+pip install -e .
+```
 ### Python Dependencies
 ```bash
 pip install -r requirements.txt
