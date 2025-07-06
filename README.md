@@ -239,7 +239,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📚 References
 
-- [LIBERO Dataset](https://github.com/libero-project/libero)
+- [LIBERO Dataset](https://github.com/Lifelong-Robot-Learning/LIBERO)
 - [LeRobot Dataset Format](https://github.com/huggingface/lerobot)
 - [HDF5 Documentation](https://www.hdfgroup.org/solutions/hdf5/)
 - [Pandas Documentation](https://pandas.pydata.org/)
