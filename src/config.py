@@ -14,9 +14,8 @@ VIDEO_FPS = 20.0             # Video frame rate
 VIDEO_CODEC = 'mp4v'         # Video codec
 VIDEO_PIX_FMT = 'yuv420p'    # Video pixel format
 
-# File Paths (can be overridden in batch_converter.py)
-INPUT_DIR = "/home/navaneet/libero-to-Lerobot/datasets/libero_object"
-OUTPUT_DIR = "/home/navaneet/libero-to-Lerobot/datasets/libero_object_lerobot_format"
+
+
 
 # Processing Configuration
 BATCH_SIZE = 1               # Number of files to process simultaneously
@@ -35,4 +34,4 @@ RETRY_DELAY = 1.0           # Delay between retries (seconds)
 # This is COnfig file 
 
 DATASET_DIR = "/home/navaneet/libero-to-Lerobot/datasets/libero_object"
-OUTPUT_DIR = "/home/navaneet/libero-to-Lerobot/datasets/libero_object_lerobot_format2"
+OUTPUT_DIR = "/home/navaneet/libero-to-Lerobot/datasets/libero_object_lerobot_format5"

@@ -44,6 +44,25 @@ def create_chunk_directory_structure(base_dir: str, chunk_index: int) -> str:
     return chunk_name
 
 
+def get_task_index(task_name: str) -> int:
+    """Get task index based on task name from the tasks.jsonl file."""
+    # This maps task names to their indices as they appear in tasks.jsonl (alphabetically sorted)
+    task_name_to_index = {
+        "pick_up_the_alphabet_soup_and_place_it_in_the_basket": 4,
+        "pick_up_the_bbq_sauce_and_place_it_in_the_basket": 9,
+        "pick_up_the_butter_and_place_it_in_the_basket": 6,
+        "pick_up_the_chocolate_pudding_and_place_it_in_the_basket": 1,
+        "pick_up_the_cream_cheese_and_place_it_in_the_basket": 8,
+        "pick_up_the_ketchup_and_place_it_in_the_basket": 7,
+        "pick_up_the_milk_and_place_it_in_the_basket": 3,
+        "pick_up_the_orange_juice_and_place_it_in_the_basket": 5,
+        "pick_up_the_salad_dressing_and_place_it_in_the_basket": 2,
+        "pick_up_the_tomato_sauce_and_place_it_in_the_basket": 0,
+        "valid": 10
+    }
+    return task_name_to_index.get(task_name, 0)  # Default to 0 if task not found
+
+
 def process_single_hdf5_file(hdf5_path: str, output_dir: str, chunk_index: int, 
                             global_episode_index: int, pbar=None) -> Dict[str, Any]:
     """
@@ -71,6 +90,9 @@ def process_single_hdf5_file(hdf5_path: str, output_dir: str, chunk_index: int,
     # Extract task name from filename
     task_name = extract_task_name_from_filename(hdf5_path)
     
+    # Get task index based on task name
+    task_index = get_task_index(task_name)
+    
     # Initialize metadata for this chunk
     episodes_data = []
     
@@ -92,10 +114,7 @@ def process_single_hdf5_file(hdf5_path: str, output_dir: str, chunk_index: int,
                 demo_group = data_group[demo_key]
                 
                 # Process the demo with global episode index
-                episode_metadata = process_single_demo_for_chunk(demo_group, global_episode_index + i, output_dir, chunk_index)
-                
-                # Update episode metadata with the correct task name
-                episode_metadata["tasks"] = [task_name, "valid"]
+                episode_metadata = process_single_demo_for_chunk(demo_group, global_episode_index + i, output_dir, chunk_index, task_name, task_index)
                 
                 episodes_data.append(episode_metadata)
                 
@@ -112,6 +131,7 @@ def process_single_hdf5_file(hdf5_path: str, output_dir: str, chunk_index: int,
         "chunk_name": chunk_name,
         "hdf5_file": os.path.basename(hdf5_path),
         "task_name": task_name,
+        "task_index": task_index,
         "episodes_count": len(episodes_data),
         "total_frames": sum(ep["length"] for ep in episodes_data),
         "episodes_data": episodes_data,

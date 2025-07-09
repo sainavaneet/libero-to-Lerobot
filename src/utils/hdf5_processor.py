@@ -30,18 +30,18 @@ def extract_demo_data(demo_group: h5py.Group) -> Tuple[np.ndarray, np.ndarray, n
 
 
 def create_timestep_data(t: int, actions: np.ndarray, rewards: np.ndarray, dones: np.ndarray, 
-                        joint_states: np.ndarray, global_episode_index: int) -> Dict[str, Any]:
+                        joint_states: np.ndarray, global_episode_index: int, task_index: int) -> Dict[str, Any]:
     """Create data dictionary for a single timestep."""
     timestamp = float(t) * TIMESTEP_DURATION  # Assuming 20 FPS (0.05s per frame)
     
     return {
-        'observation.state': joint_states[t].tolist(),
+        'observation.state': actions[t].tolist(),
         'action': actions[t].tolist(),
         'timestamp': timestamp,
-        'annotation.human.action.task_description': 0,  # Default task index
-        'task_index': 0,  # Default task index
-        'annotation.human.validity': 1,  # Valid by default
-        'episode_index': global_episode_index,  # Use global episode index
+        'annotation.human.action.task_description': 0, 
+        'task_index': task_index, 
+        'annotation.human.validity': 1, 
+        'episode_index': global_episode_index, 
         'index': t,
         'next.reward': float(rewards[t]),
         'next.done': bool(dones[t]),
@@ -49,7 +49,7 @@ def create_timestep_data(t: int, actions: np.ndarray, rewards: np.ndarray, dones
 
 
 def process_single_demo_for_chunk(demo_group: h5py.Group, episode_index: int, output_dir: str, 
-                                 chunk_index: int) -> Dict[str, Any]:
+                                 chunk_index: int, task_name: str, task_index: int) -> Dict[str, Any]:
     """Process a single demo for a specific chunk."""
     # print(f"Processing demo_{episode_index}...")
     
@@ -70,7 +70,7 @@ def process_single_demo_for_chunk(demo_group: h5py.Group, episode_index: int, ou
     with tqdm(total=num_timesteps, desc=f"Creating timestep data for demo_{episode_index}", 
               unit="timestep", leave=False, position=3) as data_pbar:
         for t in range(num_timesteps):
-            timestep_data = create_timestep_data(t, actions, rewards, dones, joint_states, episode_index)
+            timestep_data = create_timestep_data(t, actions, rewards, dones, joint_states, episode_index, task_index)
             demo_data.append(timestep_data)
             data_pbar.update(1)
             time.sleep(SLEEP_TIME)
@@ -92,7 +92,7 @@ def process_single_demo_for_chunk(demo_group: h5py.Group, episode_index: int, ou
     # Create episode metadata
     episode_metadata = {
         "episode_index": episode_index,
-        "tasks": ["pick up the object and place it in the basket", "valid"],  # This will be overridden by batch processor
+        "tasks": [task_name, "valid"],  # Use the actual task name
         "length": len(df)
     }
     

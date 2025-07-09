@@ -140,3 +140,8 @@ output/
 results/
 
 libero_to_Lerobot.egg-info
+src/utils/__pycache__/
+
+
+
+src/__pycache__/
